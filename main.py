@@ -14,6 +14,7 @@ def getText_ProxySocket(proxy_host, proxy_port, target_url):
     request = f"GET {target_url}\n\n\n"
     print(f"[DEBUG] Sending {request} Encoded with utf-8")
     s.send(request.encode('utf-8'))
+    print("[DEBUG] Sent data")
     response = b""
     while True:
         data = s.recv(4096)
