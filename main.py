@@ -116,7 +116,7 @@ def main():
             wtv = WebTVRequests(ip, port)
             wtv.getNoResponse("wtv-1800:/preregister?scriptless-visit-reason=10&0", "wtv-client-serial-number: {ssid}")
 
-            print(wtv1800)
+            # print(wtv1800)
 
 
         # End rendering
