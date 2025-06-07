@@ -101,7 +101,7 @@ def main():
             text_surface = font.render("wtv-1800:/preregister?scriptless-visit-reason=10&0", True, (0, 0, 0))
             screen.blit(text_surface, (0, 0))
             pygame.display.flip()
-            wtv1800 = getText_ProxySocket(ip, port, "wtv-1800:/preregister", f"wtv-client-serial-number: {ssid}")
+            wtv1800 = getText_ProxySocket(ip, port, "wtv-1800:/preregister", f"wtv-client-serial-number: {ssid}\nConnection: Close")
             print(wtv1800)
 
 
