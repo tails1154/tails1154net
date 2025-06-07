@@ -159,6 +159,10 @@ def main():
             pygame.display.flip()
             wtv = WebTVRequests(ip, port)
             wtv.getNoResponse("wtv-1800:/preregister?scriptless-visit-reason=10&0", f"wtv-client-serial-number: {ssid}")
+            wtv.getNoResponse("wtv-head-waiter:/login", f"wtv-client-serial-number: {ssid}")
+
+
+            connecting = False
 
             # print(wtv1800)
 
