@@ -19,7 +19,7 @@ class WebTVRequests:
         print("[DEBUG] Sent request")
 
     def disconnect(self):
-        self.s.disconnect()
+        self.s.close()
 
 
 
