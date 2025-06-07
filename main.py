@@ -13,7 +13,7 @@ class WebTVRequests:
         self.s = s
     def getNoResponse(self, url, headers=""):
         print("[DEBUG] Sending request")
-        request = f"GET {url}\n{headers}\n\n"
+        request = f"GET {url} HTTP/1.1\n{headers}\n\n"
         print(f"[DEBUG] Sending {request}")
         self.s.send(request.encode('utf-8'))
         print("[DEBUG] Sent request")
