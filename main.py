@@ -15,7 +15,7 @@ class WebTVRequests:
         print("[DEBUG] Sending request")
         request = f"GET {url}\nHost: {url}\n{headers}\n\n"
         print(f"[DEBUG] Sending {request}")
-        s.send(request.encode('utf-8'))
+        socket.send(request.encode('utf-8'))
 def getText_ProxySocket(proxy_host, proxy_port, target_url, headers=""):
     print("[DEBUG] Creating socket")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
