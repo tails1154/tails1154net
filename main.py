@@ -23,7 +23,7 @@ def getText_ProxySocket(proxy_host, proxy_port, target_url, headers=""):
     s.connect((proxy_host, proxy_port))
     print(f"[DEBUG] Connected to {proxy_host}:{proxy_port}")
     print("[DEBUG] Sending request")
-    request = f"GET {target_url}\nHost: {target_url}\n{headers}\n\n"
+    request = f"GET {target_url}\n{headers}\n\n"
     print(f"[DEBUG] Sending {request} Encoded with utf-8")
     s.send(request.encode('utf-8'))
     print("[DEBUG] Sent data")
