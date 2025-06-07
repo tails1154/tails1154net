@@ -35,6 +35,10 @@ def main():
     pygame.mixer.init()
     pygame.mixer.music.load("assets/connect.mp3", namehint="mp3")
     pygame.mixer.music.play()
+    connecting = True
+
+
+    roadImage = pygame.image.load("assets/road.gif").convert_alpha()
 
     while running:
         for event in pygame.event.get():
@@ -42,8 +46,19 @@ def main():
                 running = False
 
 
-
         screen.fill("black")
+
+
+        # Put stuff below here
+
+        if connecting:
+            screen.blit(roadImage, (0, 0))
+            pygame.display.flip()
+
+
+        # End rendering
+        pygame.display.flip()
+
 
 
 
