@@ -1,7 +1,7 @@
 import requests
 import time
 import pygame
-
+import socket
 
 
 def getText_ProxySocket(proxy_host, proxy_port, target_url):
