@@ -157,13 +157,19 @@ def main():
             pygame.display.flip()
 
 
+            # When I can (ever) read headers, I will fix this garbage code lol
+
+
             text_surface = font.render("wtv-1800:/preregister", True, (0, 0, 0))
             screen.blit(text_surface, (0, 0))
             pygame.display.flip()
             wtv = WebTVRequests(ip, port)
             wtv.getNoResponse("wtv-1800:/preregister?scriptless-visit-reason=10&0", f"wtv-client-serial-number: {ssid}")
-            wtv.getNoResponse("wtv-head-waiter:/login?", f"wtv-client-serial-number: {ssid}")
             wtv.disconnect()
+            wtv = WebTVRequests(ip, 1601)
+            wtv.getNoResponse("wtv-head-waiter:/login?", f"wtv-client-serial-number: {ssid}")
+
+
 
             connecting = False
 
