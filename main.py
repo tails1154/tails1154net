@@ -4,14 +4,14 @@ import pygame
 import socket
 import json
 
-def getText_ProxySocket(proxy_host, proxy_port, target_url):
+def getText_ProxySocket(proxy_host, proxy_port, target_url, headers=""):
     print("[DEBUG] Creating socket")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print("[DEBUG] Connecting socket")
     s.connect((proxy_host, proxy_port))
     print(f"[DEBUG] Connected to {proxy_host}:{proxy_port}")
     print("[DEBUG] Sending request")
-    request = f"GET {target_url}\n\n\n"
+    request = f"GET {target_url}\n{headers}\n\n"
     print(f"[DEBUG] Sending {request} Encoded with utf-8")
     s.send(request.encode('utf-8'))
     print("[DEBUG] Sent data")
@@ -49,6 +49,7 @@ def getText_LimitedSpeed(url):
 def main():
     global ip
     global port
+    global ssid
     print("Starting WebTV Client")
     print("Reading config.json")
     with open("config.json", 'r') as file:
@@ -56,6 +57,7 @@ def main():
 
     ip = data['ip']
     port = data['port']
+    ssid = data['ssid']
     print(f"Read config.json! ip: {ip} port: {port}")
     print("Starting pygame")
     pygame.init()
@@ -96,10 +98,10 @@ def main():
             pygame.display.flip()
 
 
-            text_surface = font.render("wtv-1800:/preregister", True, (0, 0, 0))
+            text_surface = font.render("wtv-1800:/preregister?scriptless-visit-reason=10&0", True, (0, 0, 0))
             screen.blit(text_surface, (0, 0))
             pygame.display.flip()
-            wtv1800 = getText_ProxySocket(ip, port, "wtv-1800:/preregister")
+            wtv1800 = getText_ProxySocket(ip, port, "wtv-1800:/preregister", f"wtv-client-serial-number: {ssid}")
             print(wtv1800)
 
 
