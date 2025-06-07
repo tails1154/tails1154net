@@ -8,7 +8,7 @@ def getText_ProxySocket(proxy_host, proxy_port, target_url):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((proxy_host, proxy_port))
 
-    request = f"GET {target_url} HTTP/1.1\r\nHost: {proxy_host}\r\nConnection: close\r\n\r\n"
+    request = f"GET {target_url} HTTP/1.1\r\n\r\n"
     s.send(request.encode('utf-8'))
 
     response = b""
