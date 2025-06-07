@@ -168,7 +168,7 @@ def main():
             wtv.disconnect()
             wtv = WebTVRequests(ip, 1601)
             wtv.getNoResponse("wtv-head-waiter:/login?", f"wtv-client-serial-number: {ssid}")
-
+            wtv.getNoResponse("wtv-head-waiter:/ValidateLogin?initial_login=true", f"wtv-client-serial-number: {ssid}")
 
 
             connecting = False
