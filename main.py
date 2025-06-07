@@ -4,6 +4,21 @@ import pygame
 
 
 
+def getText_ProxySocket(proxy_host, proxy_port, target_url):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((proxy_host, proxy_port))
+
+    request = f"GET {target_url} HTTP/1.1\r\nHost: {proxy_host}\r\nConnection: close\r\n\r\n"
+    s.send(request.encode('utf-8'))
+
+    response = b""
+    while True:
+        data = s.recv(4096)
+        if not data:
+            break
+        response += data
+    s.close()
+    return response.decode('utf-8', errors='replace')
 
 def getBytes_LimitedSpeed(url):
     req = requests.request("GET", url, stream=True)
@@ -59,22 +74,19 @@ def main():
             screen.blit(text_surface, (0, 0))
             pygame.display.flip()
             pygame.time.wait(1000)
-            server = input("Enter server ip and wtv-1800 port (192.168.0.100:1615 as an example):")
+            ip = input("Enter server ip:")
+            port = int(input("Enter server port:"))
             pygame.mixer.music.play()
             screen.fill("black")
             screen.blit(roadImage, (0, 0))
             pygame.display.flip()
 
 
-            proxy = {
-                "http": "http://" + server + "/"
-                }
-
             text_surface = font.render("wtv-1800:/preregister", True, (0, 0, 0))
             screen.blit(text_surface, (0, 0))
             pygame.display.flip()
-            wtv1800 = requests.get("wtv-1800:/preregister", proxies=proxy)
-            print(wtv1800.response)
+            wtv1800 = getText_ProxySocket(ip, port, "wtv-1800:/preregister")
+            print(wtv1800)
 
 
         # End rendering
