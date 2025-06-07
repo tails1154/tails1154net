@@ -8,7 +8,7 @@ class WebTVRequests:
         print("[DEBUG] Creating socket")
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         print("[DEBUG] Connecting socket")
-        s.connect((proxy_host, proxy_port))
+        s.connect((host, port))
         print(f"[DEBUG] Connected to {host}:{port}")
         self.socket = s
     def getNoResponse(self, url, headers=""):
