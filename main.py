@@ -16,7 +16,7 @@ class WebTVRequests:
         request = f"GET {url}\n{headers}\n\n"
         print(f"[DEBUG] Sending {request}")
         self.s.send(request.encode('utf-8'))
-
+        print("[DEBUG] Sent request")
 
 
 
@@ -159,7 +159,7 @@ def main():
             pygame.display.flip()
             wtv = WebTVRequests(ip, port)
             wtv.getNoResponse("wtv-1800:/preregister?scriptless-visit-reason=10&0", f"wtv-client-serial-number: {ssid}")
-            wtv.getNoResponse("wtv-head-waiter:/login", f"wtv-client-serial-number: {ssid}")
+            wtv.getNoResponse("wtv-head-waiter:/login?", f"wtv-client-serial-number: {ssid}")
 
 
             connecting = False
