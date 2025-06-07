@@ -2,7 +2,7 @@ import requests
 import time
 import pygame
 import socket
-
+import json
 
 def getText_ProxySocket(proxy_host, proxy_port, target_url):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -42,6 +42,17 @@ def getText_LimitedSpeed(url):
 
 
 def main():
+    global ip
+    global port
+    print("Starting WebTV Client")
+    print("Reading config.json")
+    with open("config.json", 'r') as file:
+        data = json.load(file)
+
+    ip = data['ip']
+    port = data['port']
+    print(f"Read config.json! ip: {ip} port: {port}")
+    print("Starting pygame")
     pygame.init()
     screen = pygame.display.set_mode((1280, 720))
     clock = pygame.time.Clock()
@@ -74,8 +85,6 @@ def main():
             screen.blit(text_surface, (0, 0))
             pygame.display.flip()
             pygame.time.wait(1000)
-            ip = input("Enter server ip:")
-            port = int(input("Enter server port:"))
             pygame.mixer.music.play()
             screen.fill("black")
             screen.blit(roadImage, (0, 0))
