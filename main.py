@@ -31,6 +31,7 @@ def main():
     screen = pygame.display.set_mode((1280, 720))
     clock = pygame.time.Clock()
     running = True
+    font = pygame.font.SysFont(None, 48)
 
     pygame.mixer.init()
     pygame.mixer.music.load("assets/connect.mp3", namehint="mp3")
@@ -52,6 +53,13 @@ def main():
         # Put stuff below here
 
         if connecting:
+            screen.blit(roadImage, (0, 0))
+            pygame.display.flip()
+            text_surface = font.render("Enter server ip and port", True, (0, 0, 0))
+            screen.blit(text_surface, (0, 0))
+            pygame.display.flip()
+            server = input("Enter server ip and wtv-1800 port (192.168.0.100:1615 as an example):")
+            screen.fill("black")
             screen.blit(roadImage, (0, 0))
             pygame.display.flip()
 
