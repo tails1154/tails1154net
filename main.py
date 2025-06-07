@@ -5,12 +5,15 @@ import socket
 import json
 
 def getText_ProxySocket(proxy_host, proxy_port, target_url):
+    print("[DEBUG] Creating socket")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    print("[DEBUG] Connecting socket")
     s.connect((proxy_host, proxy_port))
-
+    print(f"[DEBUG] Connected to {proxy_host}:{proxy_port}")
+    print("[DEBUG] Sending request")
     request = f"GET {target_url} HTTP/1.1\r\n\r\n"
+    print(f"[DEBUG] Sending {request} Encoded with utf-8")
     s.send(request.encode('utf-8'))
-
     response = b""
     while True:
         data = s.recv(4096)
@@ -18,6 +21,7 @@ def getText_ProxySocket(proxy_host, proxy_port, target_url):
             break
         response += data
     s.close()
+    print("[DEBUG] Got response")
     return response.decode('utf-8', errors='replace')
 
 def getBytes_LimitedSpeed(url):
