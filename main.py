@@ -10,12 +10,12 @@ class WebTVRequests:
         print("[DEBUG] Connecting socket")
         s.connect((host, port))
         print(f"[DEBUG] Connected to {host}:{port}")
-        self.socket = s
+        self.s = s
     def getNoResponse(self, url, headers=""):
         print("[DEBUG] Sending request")
         request = f"GET {url}\nHost: {url}\n{headers}\n\n"
         print(f"[DEBUG] Sending {request}")
-        socket.send(request.encode('utf-8'))
+        s.send(request.encode('utf-8'))
 def getText_ProxySocket(proxy_host, proxy_port, target_url, headers=""):
     print("[DEBUG] Creating socket")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
