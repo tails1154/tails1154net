@@ -3,7 +3,19 @@ import time
 import pygame
 import socket
 import json
-
+class WebTVRequests:
+    def __init__(self, host, port):
+        print("[DEBUG] Creating socket")
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print("[DEBUG] Connecting socket")
+        s.connect((proxy_host, proxy_port))
+        print(f"[DEBUG] Connected to {host}:{port}")
+        self.socket = s
+    def getNoResponse(self, url, headers=""):
+        print("[DEBUG] Sending request")
+        request = f"GET {url}\nHost: {url}\n{headers}\n\n"
+        print(f"[DEBUG] Sending {request}")
+        s.send(request.encode('utf-8'))
 def getText_ProxySocket(proxy_host, proxy_port, target_url, headers=""):
     print("[DEBUG] Creating socket")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -98,10 +110,12 @@ def main():
             pygame.display.flip()
 
 
-            text_surface = font.render("wtv-1800:/preregister?scriptless-visit-reason=10&0", True, (0, 0, 0))
+            text_surface = font.render("wtv-1800:/preregister", True, (0, 0, 0))
             screen.blit(text_surface, (0, 0))
             pygame.display.flip()
-            wtv1800 = getText_ProxySocket(ip, port, "wtv-1800:/preregister", f"wtv-client-serial-number: {ssid}\nConnection: Close")
+            wtv = WebTVRequests(ip, port)
+            wtv.getNoResponse("wtv-1800:/preregister?scriptless-visit-reason=10&0", "wtv-client-serial-number: {ssid}")
+
             print(wtv1800)
 
 
