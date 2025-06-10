@@ -407,7 +407,7 @@ def main():
 
 
             browser = WebTVBrowser(screen)
-            browser.fetch_and_render("wtv-register:/splash?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)")
+            browser.fetch_and_render(wtv, "wtv-register:/splash?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)")
 
 
 
