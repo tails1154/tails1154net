@@ -1,2 +1,7 @@
 https://www.youtube.com/watch?v=Xd607GWcY_s --- for connect.mp3
 https://github.com/SKCro/WebTV-HD/blob/9215b0c4a58d89cb601a4180e1a71479bd79b2f9/images/CityRoadUpscaled.gif --- for road.gif (thanks a lot SKCro!)
+https://github.com/SKCro/WebTV-HD/blob/main/audio/music/ROMCache/splash.mp3 --- for splash.mp3 (also from SKCro)
+
+
+
+splash.gif was ripped from WebTV from tails1154 (that's me!)

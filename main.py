@@ -3,6 +3,83 @@ import time
 import pygame
 import socket
 import json
+import re
+
+def matchPortWtvHeadWaiter(line):
+    print(line)
+    pattern = r'^wtv-service: name=wtv-head-waiter.*?host=([^\s]+)\s+port=(\d+)'
+
+    match = re.search(pattern, line, re.MULTILINE)
+    if match:
+        host = match.group(1)
+        port = match.group(2)
+        print(f"Port: {port}")
+        return port
+    else:
+        print("Match not found")
+def matchHostWtvHeadWaiter(line):
+    pattern = r'^wtv-service: name=wtv-head-waiter.*?host=([^\s]+)\s+port=(\d+)'
+
+    match = re.search(pattern, line, re.MULTILINE)
+    if match:
+        host = match.group(1)
+        port = match.group(2)
+        print(f"Host: {host}")
+        return host
+    else:
+        print("Match not found")
+      
+def matchWtvChallenge(line):
+    pattern = r'^wtv-challenge:\s*(.*)'
+    
+    
+    match = re.search(pattern, line, re.MULTILINE)
+    
+    if match:
+        challenge = match.group(1)
+        print(f"Challenge: {challenge}")
+        return challenge
+    else:
+        print("Match not found")
+def matchPortWtvService(line, service):
+    print(line)
+    pattern = fr'^wtv-service: name={service}.*?host=([^\s]+)\s+port=(\d+)'
+
+    match = re.search(pattern, line, re.MULTILINE)
+    if match:
+        host = match.group(1)
+        port = match.group(2)
+        print(f"Port: {port}")
+        return port
+    else:
+        print("Match not found")
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 class WebTVRequests:
     def __init__(self, host, port):
         print("[DEBUG] Creating socket")
@@ -17,6 +94,36 @@ class WebTVRequests:
         print(f"[DEBUG] Sending {request}")
         self.s.send(request.encode('utf-8'))
         print("[DEBUG] Sent request")
+        
+    def getResponse(self, url, headers=""):
+        request = f"GET {url} HTTP/1.1\r\n{headers}\r\n\r\n"
+        screen.fill('black')
+        if connecting:
+            roadImage = pygame.image.load("assets/road.gif").convert_alpha()
+            screen.blit(roadImage, (0, 0))
+        text_surface = font.render(url, True, (255, 255, 255))
+        screen.blit(text_surface, (50, 50))
+        pygame.display.flip()
+        for _ in range(100):
+            pygame.display.flip()
+
+        print(f"[DEBUG] Sending:\n{request}")
+        self.s.send(request.encode('utf-8'))
+
+        response = b""
+        self.s.settimeout(2)  # so it doesn't hang forever
+        try:
+            while True:
+                chunk = self.s.recv(4096)
+                if not chunk:
+                    break
+                response += chunk
+        except socket.timeout:
+            pass  # probably done receiving
+
+        print("[DEBUG] Full response received")
+        print(response.decode('utf-8', errors='replace'))
+        return response
 
     def disconnect(self):
         self.s.close()
@@ -109,6 +216,8 @@ def main():
     global ip
     global port
     global ssid
+    global font
+    global screen
     print("Starting WebTV Client")
     print("Reading config.json")
     with open("config.json", 'r') as file:
@@ -127,9 +236,12 @@ def main():
 
     pygame.mixer.init()
     pygame.mixer.music.load("assets/connect.mp3", namehint="mp3")
-
+    
+    
+    global splash
+    global connecting
+    splash = False
     connecting = True
-
 
     roadImage = pygame.image.load("assets/road.gif").convert_alpha()
 
@@ -164,17 +276,61 @@ def main():
             screen.blit(text_surface, (0, 0))
             pygame.display.flip()
             wtv = WebTVRequests(ip, port)
-            wtv.getNoResponse("wtv-1800:/preregister?scriptless-visit-reason=10&0", f"wtv-client-serial-number: {ssid}")
+            res = wtv.getResponse("wtv-1800:/preregister?scriptless-visit-reason=10&0", f"wtv-client-serial-number: {ssid}").decode('utf-8', errors='replace')
             wtv.disconnect()
-            wtv = WebTVRequests(ip, 1601)
-            wtv.getNoResponse("wtv-head-waiter:/login?", f"wtv-client-serial-number: {ssid}")
-            wtv.getNoResponse("wtv-head-waiter:/ValidateLogin?initial_login=true", f"wtv-client-serial-number: {ssid}")
-
-
+            ip = matchHostWtvHeadWaiter(res)
+            port = int(matchPortWtvHeadWaiter(res))
+            wtv = WebTVRequests(matchHostWtvHeadWaiter(res), int(matchPortWtvHeadWaiter(res)))
+            wtv.getResponse("wtv-head-waiter:/login?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false")
+            wtv.getResponse("wtv-head-waiter:/ValidateLogin?initial_login=true", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false")
+            wtv.disconnect()
+            print("[DEBUG] Reconnecting because webtv")
+            wtv = WebTVRequests(ip, port)
+            res = wtv.getResponse('wtv-head-waiter:/login?no_response=true', f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false").decode('utf-8', errors='replace')
+            challenge = matchWtvChallenge(res)
+            print(challenge)
+            wtv.disconnect()
+            wtv = WebTVRequests(ip, port)
+            wtv.getNoResponse('wtv-head-waiter:/login?no_response=true', f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false")
+          #  wtv.getResponse('wtv-head-waiter:/ValidateLogin?initial_login=true&', f"wtv-client-serial-number: {ssid}\r\n wtv-encryption: false")
+            res = wtv.getResponse("wtv-head-waiter:/login-stage-two?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false").decode('utf-8', errors='replace')
+            wtv.disconnect()
+            wtv = WebTVRequests(ip, int(matchPortWtvService(res, 'wtv-register')))
+            res = wtv.getResponse("wtv-register:/splash?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)").decode('utf-8', errors='replace')
+            # I know, this line is horrible, When I can get html rendering, I will fix it lol
+            splash_response = """<bgsound src="file://ROM/Sounds/Splash.mid">"""
+            
+            if splash_response in res:
+                pygame.mixer.music.stop()
+                pygame.mixer.music.unload()
+                pygame.mixer.music.load("assets/splash.mp3", namehint="mp3")
+                pygame.mixer.music.play()
+                splash = True
+            else:
+                print("splash_response is not in res")
+            #splash = True
             connecting = False
 
             # print(wtv1800)
 
+        if splash:
+            
+            # Load the image
+            splash_image = pygame.image.load("assets/splash.gif").convert_alpha()
+
+            # Get the rect of the image and center it on the screen
+            image_rect = splash_image.get_rect(center=screen.get_rect().center)
+
+            # Draw the image to the screen
+            screen.blit(splash_image, image_rect)
+            
+            pygame.display.flip()
+            
+            
+            
+            
+            if pygame.mixer.music.get_busy() != True:
+               splash=False
 
         # End rendering
         pygame.display.flip()
