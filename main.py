@@ -326,7 +326,7 @@ def main():
 
 
 
-            asyncio.get_event_loop().run_until_complete(render_html())
+            asyncio.get_event_loop().run_until_complete(render_html(res))
 
 
 
