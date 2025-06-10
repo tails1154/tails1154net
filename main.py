@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', () => {
 """
 
             if "file://ROM/Sounds/Splash.mid" in res:
-                res.replace("file://ROM/Sounds/Splash.mid", os.path.join(os.path.join(os.getcwd(), "assets"), "splash.mp3"))
+                res = res.replace("file://ROM/Sounds/Splash.mid", os.path.join(os.path.join(os.getcwd(), "assets"), "splash.mp3"))
             play_bgsound(res)
             await page.setContent(res)
             await page.screenshot({'path': 'temp.png'})
