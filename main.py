@@ -366,6 +366,11 @@ def main():
             # if pygame.mixer.music.get_busy() != True:
             #    splash=False
 
+
+
+
+        if not connecting:
+            asyncio.get_event_loop().run_until_complete(render_html(res))
         # End rendering
         pygame.display.flip()
 
