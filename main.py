@@ -4,6 +4,12 @@ import pygame
 import socket
 import json
 import re
+from weasyprint import HTML
+
+
+
+
+
 
 def matchPortWtvHeadWaiter(line):
     print(line)
@@ -55,7 +61,18 @@ def matchPortWtvService(line, service):
         print("Match not found")
         
         
-        
+def matchWtvVisit(line):
+     pattern = r'^wtv-visit:\s*(.*)'
+
+
+    match = re.search(pattern, line, re.MULTILINE)
+
+    if match:
+        challenge = match.group(1)
+        print(f"wtv-visit: {challenge}")
+        return challenge
+    else:
+        print("Match not found")
         
         
         
@@ -297,40 +314,48 @@ def main():
             wtv.disconnect()
             wtv = WebTVRequests(ip, int(matchPortWtvService(res, 'wtv-register')))
             res = wtv.getResponse("wtv-register:/splash?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)").decode('utf-8', errors='replace')
+            HTML(string=res).write_png("temp.png")
+            img = pygame.image.load("temp.png")
+
+
+            screen.blit(img, (0, 0))
+
+
+
             # I know, this line is horrible, When I can get html rendering, I will fix it lol
-            splash_response = """<bgsound src="file://ROM/Sounds/Splash.mid">"""
-            
-            if splash_response in res:
-                pygame.mixer.music.stop()
-                pygame.mixer.music.unload()
-                pygame.mixer.music.load("assets/splash.mp3", namehint="mp3")
-                pygame.mixer.music.play()
-                splash = True
-            else:
-                print("splash_response is not in res")
+            #splash_response = """<bgsound src="file://ROM/Sounds/Splash.mid">"""
+#
+#             if splash_response in res:
+#                 pygame.mixer.music.stop()
+#                 pygame.mixer.music.unload()
+#                 pygame.mixer.music.load("assets/splash.mp3", namehint="mp3")
+#                 pygame.mixer.music.play()
+#                 splash = True
+#             else:
+#                 print("splash_response is not in res")
             #splash = True
             connecting = False
 
             # print(wtv1800)
 
-        if splash:
-            
-            # Load the image
-            splash_image = pygame.image.load("assets/splash.gif").convert_alpha()
-
-            # Get the rect of the image and center it on the screen
-            image_rect = splash_image.get_rect(center=screen.get_rect().center)
-
-            # Draw the image to the screen
-            screen.blit(splash_image, image_rect)
-            
-            pygame.display.flip()
-            
-            
+#         if splash:
+#
+#             # Load the image
+#             splash_image = pygame.image.load("assets/splash.gif").convert_alpha()
+#
+#             # Get the rect of the image and center it on the screen
+#             image_rect = splash_image.get_rect(center=screen.get_rect().center)
+#
+#             # Draw the image to the screen
+#             screen.blit(splash_image, image_rect)
+#
+#             pygame.display.flip()
             
             
-            if pygame.mixer.music.get_busy() != True:
-               splash=False
+            
+            
+            # if pygame.mixer.music.get_busy() != True:
+            #    splash=False
 
         # End rendering
         pygame.display.flip()
