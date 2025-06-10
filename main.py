@@ -10,6 +10,14 @@ from pyppeteer import launch
 
 
 
+def render_html(res):
+            browser = await launch(headless=True)
+            page = await browser.newPage()
+            await page.setContent(res)
+            await page.screenshot({'path': 'temp.png'})
+            img = pygame.image.load("temp.png")
+            await browser.close()
+            screen.blit(img, (0, 0))
 
 
 def matchPortWtvHeadWaiter(line):
@@ -315,15 +323,11 @@ def main():
             wtv.disconnect()
             wtv = WebTVRequests(ip, int(matchPortWtvService(res, 'wtv-register')))
             res = wtv.getResponse("wtv-register:/splash?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)").decode('utf-8', errors='replace')
-            browser = await launch(headless=True)
-            page = await browser.newPage()
-            await page.setContent(res)
-            await page.screenshot({'path': 'temp.png'})
-            img = pygame.image.load("temp.png")
-            await browser.close()
 
 
-            screen.blit(img, (0, 0))
+
+            asyncio.get_event_loop().run_until_complete(render_html())
+
 
 
 
