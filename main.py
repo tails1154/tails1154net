@@ -9,8 +9,11 @@ from pyppeteer import launch
 import os
 
 
-
-async def render_html(res):
+async def launch_page():
+    browser = await launch(headless=True)
+    page = await browser.newPage()
+    return page
+async def render_html(res, page):
             res += """
 <script>
 window.addEventListener('DOMContentLoaded', () => {
@@ -28,12 +31,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
             if "file://ROM/Sounds/Splash.mid" in res:
                 res.replace("file://ROM/Sounds/Splash.mid", os.path.join(os.path.join(os.getcwd(), "assets"), "splash.mp3"))
-            browser = await launch(headless=True)
-            page = await browser.newPage()
             await page.setContent(res)
             await page.screenshot({'path': 'temp.png'})
             img = pygame.image.load("temp.png")
-            await browser.close()
             screen.blit(img, (0, 0))
 
 
@@ -261,6 +261,7 @@ def main():
     global ssid
     global font
     global screen
+    global page
     print("Starting WebTV Client")
     print("Reading config.json")
     with open("config.json", 'r') as file:
@@ -343,7 +344,8 @@ def main():
 
 
 
-            asyncio.get_event_loop().run_until_complete(render_html(res))
+
+            page = asyncio.get_event_loop().run_until_complete(launch_page())
 
 
 
@@ -387,7 +389,7 @@ def main():
 
 
         if not connecting:
-            asyncio.get_event_loop().run_until_complete(render_html(res))
+            asyncio.get_event_loop().run_until_complete(render_html(res, page))
         # End rendering
         pygame.display.flip()
 
