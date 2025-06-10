@@ -3,7 +3,7 @@ import socketserver
 import urllib.parse
 import threading
 from main import WebTVRequests
-
+import main
 
 
 global wtv_host
