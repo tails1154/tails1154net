@@ -27,7 +27,7 @@ def play_bgsound(html):
             pygame.mixer.music.play()
 
 async def launch_page():
-    browser = await launch(headless=True, args=['--proxy-server=http://localhost:8080'])
+    browser = await launch(headless=False, args=['--proxy-server=http://localhost:8080'])
     page = await browser.newPage()
     return page
 async def render_html(res, page):
