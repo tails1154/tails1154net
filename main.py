@@ -62,7 +62,7 @@ def matchPortWtvService(line, service):
         
         
 def matchWtvVisit(line):
-     pattern = r'^wtv-visit:\s*(.*)'
+    pattern = r'^wtv-visit:\s*(.*)'
 
 
     match = re.search(pattern, line, re.MULTILINE)
