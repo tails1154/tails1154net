@@ -2,7 +2,7 @@ import http.server
 import socketserver
 import urllib.parse
 import threading
-import main
+from main import WebTVRequests
 
 
 
