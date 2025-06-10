@@ -11,6 +11,23 @@ from pyppeteer import launch
 
 
 async def render_html(res):
+            res += """
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    const bgsound = document.querySelector('bgsound');
+    if (bgsound) {
+        const audio = document.createElement('audio');
+        audio.src = bgsound.getAttribute('src');
+        audio.autoplay = true;
+        audio.loop = true;
+        document.body.appendChild(audio);
+    }
+});
+</script>
+"""
+
+            if "file://ROM/Sounds/Splash.mid" in res:
+                res.replace("file://ROM/Sounds/Splash.mid", os.path.join(os.path.join(os.getcwd(), "assets"), "splash.mp3"))
             browser = await launch(headless=True)
             page = await browser.newPage()
             await page.setContent(res)
