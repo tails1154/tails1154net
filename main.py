@@ -8,7 +8,15 @@ import asyncio
 from pyppeteer import launch
 import os
 
-
+def play_bgsound(html):
+    match = re.search(r'<bgsound\s+src=["\']?(.*?)["\']?\s*/?>', html, re.IGNORECASE)
+    if match:
+        sound_path = match.group(1)
+        if sound_path.startswith("file://"):
+            sound_path = sound_path[7:]
+        print(f"[DEBUG] Playing bgsound: {sound_path}")
+        pygame.mixer.music.load(sound_path)
+        pygame.mixer.music.play()
 async def launch_page():
     browser = await launch(headless=True)
     page = await browser.newPage()
@@ -31,6 +39,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             if "file://ROM/Sounds/Splash.mid" in res:
                 res.replace("file://ROM/Sounds/Splash.mid", os.path.join(os.path.join(os.getcwd(), "assets"), "splash.mp3"))
+            play_bgsound(res)
             await page.setContent(res)
             await page.screenshot({'path': 'temp.png'})
             img = pygame.image.load("temp.png")
@@ -343,7 +352,7 @@ def main():
             wtv = WebTVRequests(ip, int(matchPortWtvService(res, 'wtv-register')))
             res = wtv.getResponse("wtv-register:/splash?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)").decode('utf-8', errors='replace')
 
-
+            pygame.mixer.music.unload()
 
 
             page = asyncio.get_event_loop().run_until_complete(launch_page())
