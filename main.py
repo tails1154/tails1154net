@@ -7,6 +7,10 @@ import re
 import asyncio
 from pyppeteer import launch
 import os
+import webtv_proxy
+import threading
+
+
 last_played_bgsound = None
 
 def play_bgsound(html):
@@ -23,7 +27,7 @@ def play_bgsound(html):
             pygame.mixer.music.play()
 
 async def launch_page():
-    browser = await launch(headless=True)
+    browser = await launch(headless=True args=['--proxy-server=http://localhost:8080'])
     page = await browser.newPage()
     return page
 async def render_html(res, page):
@@ -173,7 +177,7 @@ class WebTVRequests:
         self.s.send(request.encode('utf-8'))
         print("[DEBUG] Sent request")
         
-    def getResponse(self, url, headers=""):
+    def getResponse(self, url, headers=f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)"):
         request = f"GET {url} HTTP/1.1\r\n{headers}\r\n\r\n"
         screen.fill('black')
         if connecting:
@@ -406,6 +410,9 @@ def main():
 
 
 
+            webtv_proxy.setHostPort(ip, port)
+            threading.Thread(target=webtv_proxy.run_proxy()).start()
+            # webtv_proxy.run_proxy()
             browser = WebTVBrowser(screen)
             browser.fetch_and_render(wtv, "wtv-register:/splash?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)")
 
