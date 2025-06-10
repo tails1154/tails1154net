@@ -7,36 +7,26 @@ import re
 import asyncio
 from pyppeteer import launch
 import os
+last_played_bgsound = None
 
 def play_bgsound(html):
+    global last_played_bgsound
     match = re.search(r'<bgsound\s+src=["\']?(.*?)["\']?\s*/?>', html, re.IGNORECASE)
     if match:
         sound_path = match.group(1)
         if sound_path.startswith("file://"):
             sound_path = sound_path[7:]
-        print(f"[DEBUG] Playing bgsound: {sound_path}")
-        pygame.mixer.music.load(sound_path)
-        pygame.mixer.music.play()
+        if sound_path != last_played_bgsound:
+            last_played_bgsound = sound_path
+            print(f"[DEBUG] Playing bgsound: {sound_path}")
+            pygame.mixer.music.load(sound_path)
+            pygame.mixer.music.play()
+
 async def launch_page():
     browser = await launch(headless=True)
     page = await browser.newPage()
     return page
 async def render_html(res, page):
-            res += """
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-    const bgsound = document.querySelector('bgsound');
-    if (bgsound) {
-        const audio = document.createElement('audio');
-        audio.src = bgsound.getAttribute('src');
-        audio.autoplay = true;
-        audio.loop = true;
-        document.body.appendChild(audio);
-    }
-});
-</script>
-"""
-
             if "file://ROM/Sounds/Splash.mid" in res:
                 res = res.replace("file://ROM/Sounds/Splash.mid", os.path.join(os.path.join(os.getcwd(), "assets"), "splash.mp3"))
             play_bgsound(res)
@@ -45,6 +35,33 @@ window.addEventListener('DOMContentLoaded', () => {
             img = pygame.image.load("temp.png")
             print(res)
             screen.blit(img, (0, 0))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def matchPortWtvHeadWaiter(line):
@@ -132,6 +149,14 @@ def matchWtvVisit(line):
         
         
         
+
+
+
+
+
+
+
+
         
 class WebTVRequests:
     def __init__(self, host, port):
