@@ -4,4 +4,4 @@
 testing a webtv client
 
 
-No, this can't connect to a webtv server (yet)
+We CAN Connect to a server, but no HTML Rendering is present at the moment
