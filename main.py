@@ -411,9 +411,9 @@ def main():
 
 
             webtv_proxy.setHostPort(ip, port)
-            print("Thread")
-            threading.Thread(target=webtv_proxy.run_proxy()).start()
-            print("Got past thread")
+            print("[DEBUG] Thread")
+            threading.Thread(target=webtv_proxy.run_proxy).start()
+            print("[DEBUG] Got past thread")
             # webtv_proxy.run_proxy()
             browser = WebTVBrowser(screen)
             browser.fetch_and_render(wtv, "wtv-register:/splash?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)")
