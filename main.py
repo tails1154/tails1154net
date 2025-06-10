@@ -10,7 +10,7 @@ import os
 import webtv_proxy
 import threading
 
-
+global ssid
 last_played_bgsound = None
 
 def play_bgsound(html):
@@ -318,7 +318,7 @@ def getText_LimitedSpeed(url):
 def main():
     global ip
     global port
-    global ssid
+
     global font
     global screen
     global page
