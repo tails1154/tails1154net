@@ -9,8 +9,11 @@ from pyppeteer import launch
 import os
 import webtv_proxy
 import threading
+import webtv_state
+
 
 global ssid
+
 last_played_bgsound = None
 
 def play_bgsound(html):
@@ -327,6 +330,8 @@ def main():
     with open("config.json", 'r') as file:
         data = json.load(file)
 
+
+    webtv_state.set_connection_info(data['ip'], data['port'])
     ip = data['ip']
     port = data['port']
     ssid = data['ssid']
@@ -411,6 +416,7 @@ def main():
 
 
             webtv_proxy.setHostPort(ip, port)
+            webtv_state.set_connection_info(ip, port, ssid)
             print("[DEBUG] Thread")
             threading.Thread(target=webtv_proxy.run_proxy).start()
             print("[DEBUG] Got past thread")

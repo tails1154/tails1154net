@@ -4,6 +4,7 @@ import urllib.parse
 import threading
 from main import WebTVRequests
 import main
+import webtv_state
 
 
 global wtv_host
@@ -28,6 +29,8 @@ class WebTVProxyHandler(http.server.BaseHTTPRequestHandler):
 
         print(f"[PROXY] Handling GET for {target_url}")
 
+        ssid = webtv_state.getSsid()
+
         # You may want to initialize WebTVRequests here, or reuse an instance
         # For example, create once per connection or globally.
         # Here, we'll assume host and port are known ahead of time:
@@ -35,7 +38,7 @@ class WebTVProxyHandler(http.server.BaseHTTPRequestHandler):
 
         # Create a WebTVRequests instance
 
-        wtv = WebTVRequests(main.getIp(), main.getPort())
+        wtv = WebTVRequests(webtv_state.getIp(), webtv_state.getPort())
 
         # Use your class to get the response bytes
         try:
