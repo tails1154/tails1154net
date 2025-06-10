@@ -177,7 +177,7 @@ class WebTVRequests:
         self.s.send(request.encode('utf-8'))
         print("[DEBUG] Sent request")
         
-    def getResponse(self, url, headers=f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)"):
+    def getResponse(self, url, headers=""):
         request = f"GET {url} HTTP/1.1\r\n{headers}\r\n\r\n"
         screen.fill('black')
         if connecting:

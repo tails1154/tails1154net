@@ -38,7 +38,7 @@ class WebTVProxyHandler(http.server.BaseHTTPRequestHandler):
 
         # Use your class to get the response bytes
         try:
-            response_bytes = wtv.getResponse(target_url).decode('utf-8', errors='replace').encode('utf-8')
+            response_bytes = wtv.getResponse(target_url, f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)").decode('utf-8', errors='replace').encode('utf-8')
         except Exception as e:
             print(f"[PROXY ERROR] {e}")
             self.send_error(502, "Bad Gateway")
