@@ -10,7 +10,7 @@ from pyppeteer import launch
 
 
 
-def render_html(res):
+async def render_html(res):
             browser = await launch(headless=True)
             page = await browser.newPage()
             await page.setContent(res)
