@@ -34,6 +34,7 @@ window.addEventListener('DOMContentLoaded', () => {
             await page.setContent(res)
             await page.screenshot({'path': 'temp.png'})
             img = pygame.image.load("temp.png")
+            print(res)
             screen.blit(img, (0, 0))
 
 
