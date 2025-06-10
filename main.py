@@ -45,27 +45,6 @@ async def render_html(res, page):
 
 
 
-class WebTVBrowser:
-    def __init__(self, screen):
-        self.screen = screen
-        self.page = asyncio.get_event_loop().run_until_complete(launch_page())
-
-    def fetch_and_render(self, wtv: WebTVRequests, path: str, headers: str):
-        html = wtv.getResponse(path, headers).decode('utf-8', errors='replace')
-        asyncio.get_event_loop().run_until_complete(self.render_html(html))
-
-    async def render_html(self, html):
-        if "file://ROM/Sounds/Splash.mid" in html:
-            html = html.replace("file://ROM/Sounds/Splash.mid", os.path.join(os.getcwd(), "assets", "splash.mp3"))
-        play_bgsound(html)
-        await self.page.setContent(html)
-        await self.page.screenshot({'path': 'temp.png'})
-        img = pygame.image.load("temp.png")
-        self.screen.blit(img, (0, 0))
-
-
-
-
 
 
 
@@ -258,6 +237,27 @@ class WebTVRequests:
 
 
 
+
+
+
+
+class WebTVBrowser:
+    def __init__(self, screen):
+        self.screen = screen
+        self.page = asyncio.get_event_loop().run_until_complete(launch_page())
+
+    def fetch_and_render(self, wtv: WebTVRequests, path: str, headers: str):
+        html = wtv.getResponse(path, headers).decode('utf-8', errors='replace')
+        asyncio.get_event_loop().run_until_complete(self.render_html(html))
+
+    async def render_html(self, html):
+        if "file://ROM/Sounds/Splash.mid" in html:
+            html = html.replace("file://ROM/Sounds/Splash.mid", os.path.join(os.getcwd(), "assets", "splash.mp3"))
+        play_bgsound(html)
+        await self.page.setContent(html)
+        await self.page.screenshot({'path': 'temp.png'})
+        img = pygame.image.load("temp.png")
+        self.screen.blit(img, (0, 0))
 
 
 
