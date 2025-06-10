@@ -45,6 +45,27 @@ async def render_html(res, page):
 
 
 
+class WebTVBrowser:
+    def __init__(self, screen):
+        self.screen = screen
+        self.page = asyncio.get_event_loop().run_until_complete(launch_page())
+
+    def fetch_and_render(self, wtv: WebTVRequests, path: str, headers: str):
+        html = wtv.getResponse(path, headers).decode('utf-8', errors='replace')
+        asyncio.get_event_loop().run_until_complete(self.render_html(html))
+
+    async def render_html(self, html):
+        if "file://ROM/Sounds/Splash.mid" in html:
+            html = html.replace("file://ROM/Sounds/Splash.mid", os.path.join(os.getcwd(), "assets", "splash.mp3"))
+        play_bgsound(html)
+        await self.page.setContent(html)
+        await self.page.screenshot({'path': 'temp.png'})
+        img = pygame.image.load("temp.png")
+        self.screen.blit(img, (0, 0))
+
+
+
+
 
 
 
@@ -200,7 +221,7 @@ class WebTVRequests:
             pass  # probably done receiving
 
         print("[DEBUG] Full response received")
-        print(response.decode('utf-8', errors='replace'))
+        # print(response.decode('utf-8', errors='replace'))
         return response
 
     def disconnect(self):
@@ -380,7 +401,13 @@ def main():
             pygame.mixer.music.unload()
 
 
-            page = asyncio.get_event_loop().run_until_complete(launch_page())
+            # page = asyncio.get_event_loop().run_until_complete(launch_page())
+
+
+
+
+            browser = WebTVBrowser(screen)
+            browser.fetch_and_render("wtv-register:/splash?", f"wtv-client-serial-number: {ssid}\r\nwtv-encryption: false\r\nwtv-client-bootrom-version: 2046\r\nUser-Agent: Mozilla/4.0 WebTV/2.5.5 (compatible; MSIE 4.0)")
 
 
 
@@ -421,10 +448,6 @@ def main():
             #    splash=False
 
 
-
-
-        if not connecting:
-            asyncio.get_event_loop().run_until_complete(render_html(res, page))
         # End rendering
         pygame.display.flip()
 
