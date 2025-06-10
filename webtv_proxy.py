@@ -34,7 +34,8 @@ class WebTVProxyHandler(http.server.BaseHTTPRequestHandler):
         # Change these to your WebTV server host and port:
 
         # Create a WebTVRequests instance
-        wtv = WebTVRequests(wtv_host, wtv_port)
+
+        wtv = WebTVRequests(main.getIp(), main.getPort())
 
         # Use your class to get the response bytes
         try:

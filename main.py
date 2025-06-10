@@ -462,7 +462,10 @@ def main():
 
 
 
-
+def getIp():
+    return ip
+def getPort():
+    return port
 
 
 if __name__ == "__main__":
